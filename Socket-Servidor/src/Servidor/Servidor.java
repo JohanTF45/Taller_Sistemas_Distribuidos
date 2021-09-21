@@ -13,23 +13,24 @@ import java.net.Socket;
 
 public class Servidor {
 	
-	final int PUERTO = 5000;
-	String archivo = "C:/Users/JT/Documents/datos.txt";
-	DataInputStream dataInputStream;
-	DataOutputStream dataOutputStream;
+	final int PUERTO = 5000; //definimos el PUERTO
+	String archivo = "C:/Users/JT/Documents/datos.txt"; //Ruta archivo
+	DataInputStream dataInputStream; //Recibe Datos
+	DataOutputStream dataOutputStream; //Recibe Datos
 	ServerSocket servidor = null;
 	Socket socket = null;
 	
 	public void EscucharCliente() {
 		try {
-			servidor = new ServerSocket(PUERTO);
+			servidor = new ServerSocket(PUERTO); //habilita el puerto
 			System.out.println("Iniciando Servidor");
 			
 			while (true) {
-				socket = servidor.accept();
+				socket = servidor.accept(); //acepta la cenexion con el cliente
 				System.out.println("Conectado");
 				
-				dataInputStream = new DataInputStream(socket.getInputStream());
+				//escucha si el cliente si envia algun datos
+				dataInputStream = new DataInputStream(socket.getInputStream()); 
 				dataOutputStream = new DataOutputStream(socket.getOutputStream());
 				
 				String mensaje = dataInputStream.readUTF();
@@ -64,6 +65,7 @@ public class Servidor {
 	public String RegistrarCuenta(String NumCuenta, String valor) {
 		FileWriter fichero = null;
 		PrintWriter PrintWriter = null;
+		//Definimos los terminos para que permita leer y escribir los datos en el fichero
 		try {
 			fichero = new FileWriter(archivo, true);
 			PrintWriter = new PrintWriter(fichero);
@@ -88,14 +90,17 @@ public class Servidor {
 	
 	public String BuscarCuenta(String NumCuenta) throws IOException{
 		String cadena;
-		FileReader FileReader = new FileReader(archivo);
+		// lee el archivo
+		FileReader FileReader = new FileReader(archivo); 
 		BufferedReader BufferedReader = new BufferedReader(FileReader);
+		//se cree una cadena para que lea linea por linea si existe ese NumCuenta 
 		while ((cadena = BufferedReader.readLine()) != null) {
 			String DatosCuenta[] = cadena.split(",");
 			if (DatosCuenta[0].equals(NumCuenta)) {
 				return DatosCuenta[1];
 			}
 		}
+		//cierra el proceso e imprime mensaje No existe cuenta
 		BufferedReader.close();
 		return "La cuenta ingresada no se encuentra registrada,\n por favor vuelva a intentarlo o registre una nueva cuenta";
 	}
